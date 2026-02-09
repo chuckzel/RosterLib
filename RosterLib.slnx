@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RosterLib.Csv/RosterLib.Csv.csproj" />
+    <Project Path="src/RosterLib.Domain/RosterLib.Domain.csproj" />
+  </Folder>
+</Solution>
