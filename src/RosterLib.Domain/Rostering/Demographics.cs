@@ -5,18 +5,13 @@ namespace RosterLib.Domain.Rostering;
 
 /// <summary>
 /// Represents demographics for a user in the OneRoster Rostering specification.
-/// Demographics are an optional extension to the core user record.
+/// Demographics are an optional extension to the core user record. Its SourcedId is the same as the associated user.
 /// </summary>
 /// <remarks>
 /// <see href="https://www.imsglobal.org/sites/default/files/spec/oneroster/v1p2/rostering-informationmodel/OneRosterv1p2RosteringService_InfoModelv1p0.html#Data_Demographics">OneRoster Demographics specification</see>
 /// </remarks>
 public class Demographics : Base
 {
-    /// <summary>
-    /// The link to the associated user i.e. the sourcedId for the user.
-    /// </summary>
-    public required string UserSourcedId { get; set; }
-
     public DateOnly? BirthDate { get; set; }
     public GenderEnum? Sex { get; set; }
     public bool? AmericanIndianOrAlaskaNative { get; set; }

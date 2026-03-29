@@ -11,26 +11,24 @@ public sealed class UserMap : BaseMap<User>
 {
     public UserMap()
     {
-        Map(m => m.UserMasterIdentifier).Name("userMasterIdentifier");
-        Map(m => m.Username).Name("username");
-        Map(m => m.EnabledUser).Name("enabledUser");
-        Map(m => m.GivenName).Name("givenName");
-        Map(m => m.FamilyName).Name("familyName");
-        Map(m => m.MiddleName).Name("middleName");
-        Map(m => m.PreferredFirstName).Name("preferredFirstName");
-        Map(m => m.PreferredMiddleName).Name("preferredMiddleName");
-        Map(m => m.PreferredLastName).Name("preferredLastName");
-        Map(m => m.Pronouns).Name("pronouns");
-        Map(m => m.PrimaryOrgSourcedId).Name("primaryOrgSourcedId");
-        Map(m => m.Identifier).Name("identifier");
-        Map(m => m.Email).Name("email");
-        Map(m => m.Sms).Name("sms");
-        Map(m => m.Phone).Name("phone");
-        Map(m => m.AgentSourcedIds).Name("agentSourcedIds").TypeConverter<CommaSeparatedStringConverter>();
-        Map(m => m.Grades).Name("grades").TypeConverter<CommaSeparatedStringConverter>();
-        Map(m => m.Password).Name("password");
-        
-        // UserIds collection is not included in standard CSV - would require separate file or custom handling
-        Map(m => m.UserIds).Ignore();
+        Map(m => m.EnabledUser).Name("enabledUser").Index(3);
+        Map(m => m.Username).Name("username").Index(4);
+        Map(m => m.UserIds).Name("userIds").Index(5).Optional().TypeConverter<UserIdListConverter>();
+        Map(m => m.GivenName).Name("givenName").Index(6);
+        Map(m => m.FamilyName).Name("familyName").Index(7);
+        Map(m => m.MiddleName).Name("middleName").Index(8).Optional();
+        Map(m => m.Identifier).Name("identifier").Index(9).Optional();
+        Map(m => m.Email).Name("email").Index(10).Optional();
+        Map(m => m.Sms).Name("sms").Index(11).Optional();
+        Map(m => m.Phone).Name("phone").Index(12).Optional();
+        Map(m => m.AgentSourcedIds).Name("agentSourcedIds").Index(13).Optional().TypeConverter<CommaSeparatedStringConverter>();
+        Map(m => m.Grades).Name("grades").Index(14).Optional().TypeConverter<CommaSeparatedStringConverter>();
+        Map(m => m.Password).Name("password").Index(15).Optional();
+        Map(m => m.UserMasterIdentifier).Name("userMasterIdentifier").Index(16).Optional();
+        Map(m => m.PreferredFirstName).Name("preferredGivenName").Index(17).Optional();
+        Map(m => m.PreferredMiddleName).Name("preferredMiddleName").Index(18).Optional();
+        Map(m => m.PreferredLastName).Name("preferredFamilyName").Index(19).Optional();
+        Map(m => m.PrimaryOrgSourcedId).Name("primaryOrgSourcedId").Index(20).Optional();
+        Map(m => m.Pronouns).Name("pronouns").Index(21).Optional();
     }
 }

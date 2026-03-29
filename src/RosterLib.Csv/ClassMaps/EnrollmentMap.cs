@@ -12,12 +12,12 @@ public sealed class EnrollmentMap : BaseMap<Enrollment>
 {
     public EnrollmentMap()
     {
-        Map(m => m.ClassSourcedId).Name("classSourcedId");
-        Map(m => m.SchoolSourcedId).Name("schoolSourcedId");
-        Map(m => m.UserSourcedId).Name("userSourcedId");
-        Map(m => m.Role).Name("role").TypeConverter<ClassEnumConverter<EnrollmentRoleEnum>>();
-        Map(m => m.Primary).Name("primary");
-        Map(m => m.BeginDate).Name("beginDate").TypeConverter<DateOnlyConverter>();
-        Map(m => m.EndDate).Name("endDate").TypeConverter<DateOnlyConverter>();
+        Map(m => m.ClassSourcedId).Name("classSourcedId").Index(3);
+        Map(m => m.SchoolSourcedId).Name("schoolSourcedId").Index(4);
+        Map(m => m.UserSourcedId).Name("userSourcedId").Index(5);
+        Map(m => m.Role).Name("role").Index(6).TypeConverter<ClassEnumConverter<EnrollmentRoleEnum>>();
+        Map(m => m.Primary).Name("primary").Index(7).Optional();
+        Map(m => m.BeginDate).Name("beginDate").Index(8).Optional().TypeConverter<DateOnlyConverter>();
+        Map(m => m.EndDate).Name("endDate").Index(9).Optional().TypeConverter<DateOnlyConverter>();
     }
 }

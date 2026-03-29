@@ -12,9 +12,9 @@ public sealed class OrgMap : BaseMap<Org>
 {
     public OrgMap()
     {
-        Map(m => m.Name).Name("name");
-        Map(m => m.Type).Name("type").TypeConverter<ClassEnumConverter<OrgTypeEnum>>();
-        Map(m => m.Identifier).Name("identifier");
-        Map(m => m.ParentSourcedId).Name("parentSourcedId");
+        Map(m => m.Name).Name("name").Index(3);
+        Map(m => m.Type).Name("type").Index(4).TypeConverter<ClassEnumConverter<OrgTypeEnum>>();
+        Map(m => m.Identifier).Name("identifier").Index(5).Optional();
+        Map(m => m.ParentSourcedId).Name("parentSourcedId").Index(6).Optional();
     }
 }

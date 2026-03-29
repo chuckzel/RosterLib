@@ -12,9 +12,9 @@ public abstract class BaseMap<T> : ClassMap<T> where T : Base
 {
     protected BaseMap()
     {
-        Map(m => m.SourcedId).Name("sourcedId");
-        Map(m => m.Status).Name("status").TypeConverter<ClassEnumConverter<StatusEnum>>();
-        Map(m => m.DateLastModified).Name("dateLastModified").TypeConverter<DateTimeConverter>();
+        Map(m => m.SourcedId).Name("sourcedId").Index(0);
+        Map(m => m.Status).Name("status").Index(1).TypeConverter<ClassEnumConverter<StatusEnum>>();
+        Map(m => m.DateLastModified).Name("dateLastModified").Index(2).TypeConverter<DateTimeConverter>();
         Map(m => m.Metadata).Name("metadata").TypeConverter<MetadataConverter>().Ignore();
     }
 }
