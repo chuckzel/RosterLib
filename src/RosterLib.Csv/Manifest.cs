@@ -1,26 +1,13 @@
-using System.IO.Compression;
-using CsvHelper;
 using CsvHelper.Configuration;
 
 namespace RosterLib.Csv;
-
-public static class FileDefinitions
-{
-    public class FileDefinition<T>
-    {
-        public required string FileName { get; init; }
-        public required IEnumerable<ClassMap> MapsToRegister { get; init; }
-        public required Func<OneRosterSnapshot, List<T>> GetData { get; init; }
-
-    }
-}
 
 public class Manifest
 {
     public string ManifestVersion { get; private set; } = "1.0";
     public string OneRosterVersion { get; private set; } = "1.2";
-    public string? SourceSystemName { get; private set; }
-    public string? SourceSystemCode { get; private set; }
+    public string? SourceSystemName { get; set; }
+    public string? SourceSystemCode { get; set; }
     public Dictionary<string, FileMode> Files { get; init; } = [];
 
     public static Manifest FromRows(IEnumerable<ManifestRow> rows)
@@ -45,10 +32,11 @@ public class Manifest
                 case "source.systemCode":
                     manifest.SourceSystemCode = row.Value;
                     break;
-                case var _ when row.PropertyName.StartsWith("file."):
+                case var _ when row.PropertyName.StartsWith("file.", StringComparison.Ordinal):
                     var fileName = row.PropertyName[5..];
                     if (manifest.Files.ContainsKey(fileName))
                         throw new InvalidDataException($"Duplicate file entry in manifest: {fileName}");
+
                     manifest.Files[fileName] = row.Value switch
                     {
                         "absent" => FileMode.Absent,
@@ -61,6 +49,7 @@ public class Manifest
                     throw new InvalidDataException($"Unknown manifest property: {row.PropertyName}");
             }
         }
+
         return manifest;
     }
 
@@ -72,17 +61,13 @@ public class Manifest
             new() { PropertyName = "oneRoster.version", Value = OneRosterVersion }
         };
 
-        if (!string.IsNullOrEmpty(SourceSystemName))
-        {
+        if (!string.IsNullOrWhiteSpace(SourceSystemName))
             rows.Add(new ManifestRow { PropertyName = "source.systemName", Value = SourceSystemName });
-        }
 
-        if (!string.IsNullOrEmpty(SourceSystemCode))
-        {
+        if (!string.IsNullOrWhiteSpace(SourceSystemCode))
             rows.Add(new ManifestRow { PropertyName = "source.systemCode", Value = SourceSystemCode });
-        }
 
-        foreach (var file in Files)
+        foreach (var file in Files.OrderBy(f => f.Key, StringComparer.OrdinalIgnoreCase))
         {
             var modeValue = file.Value switch
             {
@@ -96,6 +81,7 @@ public class Manifest
 
         return rows;
     }
+
     public enum FileMode
     {
         Absent,
@@ -104,50 +90,17 @@ public class Manifest
     }
 }
 
-public class ManifestRow
+public sealed class ManifestRow
 {
     public required string PropertyName { get; set; }
     public required string Value { get; set; }
 }
 
-public class ManifestRowMap : ClassMap<ManifestRow>
+public sealed class ManifestRowMap : ClassMap<ManifestRow>
 {
     public ManifestRowMap()
     {
-        Map(m => m.PropertyName).Name("propertyName");
-        Map(m => m.Value).Name("value");
-    }
-}
-
-public class ORCsvReader
-{
-    public async Task<OneRosterSnapshot> ReadZipAsync(ZipArchive archive)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    private async Task<List<T>?> ReadEntryAsync<T>(ZipArchive archive, string entryName, IEnumerable<ClassMap> mapsToRegister)
-    {
-        var entry = archive.GetEntry(entryName);
-        if (entry == null)
-            return null;
-
-        using var entryStream = entry.Open();
-        return await ReadCsvAsync<T>(entryStream, mapsToRegister);
-    }
-
-    private async Task<List<T>?> ReadCsvAsync<T>(Stream entryStream, IEnumerable<ClassMap> mapsToRegister)
-    {
-        using var reader = new StreamReader(entryStream);
-        using var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
-
-        foreach (var map in mapsToRegister)
-        {
-            csv.Context.RegisterClassMap(map);
-        }
-
-        var records = csv.GetRecordsAsync<T>();
-        return await records.ToListAsync();
+        Map(m => m.PropertyName).Name("propertyName").Index(0);
+        Map(m => m.Value).Name("value").Index(1);
     }
 }
