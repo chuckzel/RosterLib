@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using CsvHelper.Configuration;
 using RosterLib.Csv.ClassMaps;
+using RosterLib.Domain;
 using RosterLib.Domain.Rostering;
 
 namespace RosterLib.Csv;

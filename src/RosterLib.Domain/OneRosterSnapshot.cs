@@ -1,6 +1,6 @@
 using RosterLib.Domain.Rostering;
 
-namespace RosterLib.Csv;
+namespace RosterLib.Domain;
 
 /// <summary>
 /// Represents a complete OneRoster dataset snapshot.
